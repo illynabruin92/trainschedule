@@ -17,6 +17,17 @@ var config = {
 
 var database = firebase.database();
 
+//Display Time h3
+  function displayTime() {
+    var time = moment().format('HH:mm');
+    $('#time').html(time);
+    setTimeout(displayTime, 1000);
+  }
+
+  $(document).ready(function() {
+      displayTime();
+  });
+
 
 // 2. Button for adding Train
 $("#addTrainBtn").on("click", function(){
@@ -57,7 +68,7 @@ $("#addTrainBtn").on("click", function(){
 
 
 // 3. Create Firebase event for adding train to the database and a row in the html when a user adds an entry
-database.ref().on("child_added", function(childSnapshot, prevChildKey){
+database.ref().on("child_added", function(childSnapshot){
 
 	console.log(childSnapshot.val());
 
@@ -68,37 +79,41 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey){
 	var trFrequency = childSnapshot.val().frequency;
 
 	// Train Info
-	console.log(trName);
-	console.log(trDestination);
-	console.log(trStart);
-	console.log(trFrequency);
+	console.log('Train: ' + trName);
+	console.log('Destination: ' + trDestination);
+	console.log('First Departure: ' + trStart);
+	console.log('Frequency: ' +trFrequency);
+
+
 
 
   // Current Time
   var currentTime = moment();
-  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+  console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
+
+
+		var blueTrain = moment(trStart, "HH:mm").subtract(1, "years");
+		console.log("New time: " + blueTrain);
 
 
   // Difference between the times
-  var diffTime = moment().diff(moment(trStart), "minutes");
-  console.log("DIFFERENCE IN TIME: " + diffTime);
+  var diffTime = moment().diff(moment(blueTrain), "days");
+  console.log('DIFFERENCE IN TIME: ' + diffTime);
 
   // Time apart (remainder)
   var trRemainder = diffTime % trFrequency;
-  console.log(trRemainder);
+  console.log('Time Apart: ' + trRemainder);
 
   // Minute Until Train
   var trMinutesTillTrain = trFrequency - trRemainder;
-  console.log("MINUTES TILL TRAIN: " + trMinutesTillTrain);
+  console.log("MINUTES TILL TRAIN: " + trMinutesTillTrain + "minutes");
 
   // Next Train
   var nextTrain = moment().add(trMinutesTillTrain, "minutes")
-  console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"))
+  console.log("ARRIVAL TIME: " + moment(nextTrain).format("HH:mm"))
 
 
 	// Add each train's data into the table
-	$("#trainTable > tbody").append("<tr><td>" + trName + "</td><td>" + trDestination + "</td><td>" + trFrequency + "</td><td>" + nextTrain + "</td><td>" + trMinutesTillTrain + "</td></tr>");
+	$("#trainTable > tbody").append("<tr><td>" + trName + "</td><td>" + trDestination + "</td><td>" + trFrequency + "</td><td>" + nextTrain.format("HH:mm") + "</td><td>" + trMinutesTillTrain + "</td></tr>");
 
 });
-
-</script>

@@ -85,19 +85,16 @@ database.ref().on("child_added", function(childSnapshot){
 	console.log('Frequency: ' +trFrequency);
 
 
-
-
-  // Current Time
-  var currentTime = moment();
-  console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
-
-
 		var blueTrain = moment(trStart, "HH:mm").subtract(1, "years");
 		console.log("New time: " + blueTrain);
 
+    // Current Time
+    var currentTime = moment();
+    console.log('CURRENT TIME: ' + moment(currentTime).format("HH:mm"));
+
 
   // Difference between the times
-  var diffTime = moment().diff(moment(blueTrain), "days");
+  var diffTime = moment().diff(moment(blueTrain), "minutes");
   console.log('DIFFERENCE IN TIME: ' + diffTime);
 
   // Time apart (remainder)
@@ -106,11 +103,11 @@ database.ref().on("child_added", function(childSnapshot){
 
   // Minute Until Train
   var trMinutesTillTrain = trFrequency - trRemainder;
-  console.log("MINUTES TILL TRAIN: " + trMinutesTillTrain + "minutes");
+  console.log('MINUTES TILL TRAIN: ' + trMinutesTillTrain + "minutes");
 
   // Next Train
-  var nextTrain = moment().add(trMinutesTillTrain, "minutes")
-  console.log("ARRIVAL TIME: " + moment(nextTrain).format("HH:mm"))
+  var nextTrain = moment().add(trMinutesTillTrain, "minutes");
+  console.log('ARRIVAL TIME: ' + moment(nextTrain).format("HH:mm"))
 
 
 	// Add each train's data into the table
